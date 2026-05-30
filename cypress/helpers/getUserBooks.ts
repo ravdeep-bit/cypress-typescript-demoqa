@@ -1,7 +1,6 @@
 import { apiLogin } from './apiLogin';
 
 // Returns the user's current book collection via the demoqa REST API.
-// Does its own login so the UI session isn't a prerequisite.
 export function getUserBooks(): Cypress.Chainable<Array<{ isbn: string; title: string }>> {
   return apiLogin()
     .then(({ userId, token }) =>
