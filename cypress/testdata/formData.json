@@ -1,0 +1,13 @@
+{
+  "firstName": "Ravdeep",
+  "lastName": "Saini",
+  "email": "ravdeep.saini31@gmail.com",
+  "mobile": "0123456789",
+  "gender": "Female",
+  "subject": "English",
+  "hobby": "Sports",
+  "address": "Sydney",
+  "state": "NCR",
+  "city": "Delhi",
+  "dob": { "day": 1, "month": "May", "year": 2026 }
+}

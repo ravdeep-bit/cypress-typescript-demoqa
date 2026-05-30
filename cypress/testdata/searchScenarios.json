@@ -1,0 +1,34 @@
+[
+  {
+    "description": "exact full title is searched",
+    "searchTerm": "Git Pocket Guide",
+    "expectEmpty": false,
+    "expectedTitleContains": "Git Pocket Guide",
+    "smoke": true
+  },
+  {
+    "description": "partial title is searched",
+    "searchTerm": "JavaScript",
+    "expectEmpty": false,
+    "expectedTitleContains": "JavaScript"
+  },
+  {
+    "description": "search is case-insensitive",
+    "searchTerm": "git pocket guide",
+    "expectEmpty": false,
+    "expectedTitleContains": "Git Pocket Guide"
+  },
+  {
+    "description": "author name is searched",
+    "searchTerm": "Richard E. Silverman",
+    "expectEmpty": false,
+    "expectedTitleContains": "Git Pocket Guide"
+  },
+  {
+    "description": "non-existent term returns no rows",
+    "searchTerm": "zzz-no-such-book-zzz",
+    "expectEmpty": true,
+    "expectedTitleContains": null,
+    "smoke": true
+  }
+]

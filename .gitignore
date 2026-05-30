@@ -1,0 +1,18 @@
+node_modules/
+
+# Cypress runtime artefacts — regenerated each run
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+cypress/reports/
+
+# Local env files (credentials)
+.env
+.env.local
+cypress.env.json
+
+# OS / editor noise
+.DS_Store
+.vscode/
+.idea/
+*.log
