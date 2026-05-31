@@ -1,5 +1,15 @@
-// Each labelled field on the detail page lives in #<id>-wrapper > .col-md-9.
-const FIELD_VALUE = (id: string): string => `#${id}-wrapper .col-md-9`;
+// Each labelled field on the detail page lives in #<id>-wrapper, label in .col-md-3, value in .col-md-9.
+const FIELD_WRAPPERS = {
+  isbn: '#ISBN-wrapper',
+  title: '#title-wrapper',
+  subtitle: '#subtitle-wrapper',
+  author: '#author-wrapper',
+  publisher: '#publisher-wrapper',
+  pages: '#pages-wrapper',
+  description: '#description-wrapper',
+  website: '#website-wrapper',
+} as const;
+type FieldName = keyof typeof FIELD_WRAPPERS;
 
 export class BookDetailsPage {
   // id="addNewRecordButton" is reused for "Add To Your Collection" (logged in)
@@ -22,8 +32,13 @@ export class BookDetailsPage {
       .then((stub) => (stub as unknown as sinon.SinonStub).firstCall.args[0] as string);
   }
 
-  // Returns the trimmed text of a labelled field on the detail page.
-  getField(id: string): Cypress.Chainable<string> {
-    return cy.get(FIELD_VALUE(id)).invoke('text').then((text) => text.trim());
+  // Returns the trimmed value text (right column) of a labelled field.
+  getField(name: FieldName): Cypress.Chainable<string> {
+    return cy.get(`${FIELD_WRAPPERS[name]} .col-md-9`).invoke('text').then((text) => text.trim());
+  }
+
+  // Returns the trimmed label text (left column) of a labelled field.
+  getLabel(name: FieldName): Cypress.Chainable<string> {
+    return cy.get(`${FIELD_WRAPPERS[name]} .col-md-3`).invoke('text').then((text) => text.trim());
   }
 }

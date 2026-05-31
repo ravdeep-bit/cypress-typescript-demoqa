@@ -16,18 +16,29 @@ describe('Book Details — lets a user view a book\'s metadata', () => {
     cy.url().should('include', '/books?search=');
     bookDetailsPage.getIsbnFromUrl().then((urlIsbn) => {
       expect(urlIsbn).to.not.be.empty;
-      bookDetailsPage.getField('ISBN').should('equal', urlIsbn);
+      bookDetailsPage.getField('isbn').should('equal', urlIsbn);
     });
   });
 
-  it('displays the expected metadata fields for a known book', () => {
-    bookDetailsPage.getField('ISBN').should('not.be.empty');
+  it('displays non empty metadata fields for a known book', () => {
+    bookDetailsPage.getField('isbn').should('not.be.empty');
     bookDetailsPage.getField('title').should('equal', knownBook.title);
     bookDetailsPage.getField('author').should('not.be.empty');
     bookDetailsPage.getField('publisher').should('not.be.empty');
     bookDetailsPage.getField('pages').should('not.be.empty');
     bookDetailsPage.getField('description').should('not.be.empty');
     bookDetailsPage.getField('website').should('match', /^https?:\/\/.+/);
+  });
+
+  it('renders the expected field labels', () => {
+    bookDetailsPage.getLabel('isbn').should('contain', 'ISBN');
+    bookDetailsPage.getLabel('title').should('contain', 'Title');
+    bookDetailsPage.getLabel('subtitle').should('contain', 'Sub Title');
+    bookDetailsPage.getLabel('author').should('contain', 'Author');
+    bookDetailsPage.getLabel('publisher').should('contain', 'Publisher');
+    bookDetailsPage.getLabel('pages').should('contain', 'Total Pages');
+    bookDetailsPage.getLabel('description').should('contain', 'Description');
+    bookDetailsPage.getLabel('website').should('contain', 'Website');
   });
 
   it('does not render "Add To Your Collection" button when not logged in', () => {
