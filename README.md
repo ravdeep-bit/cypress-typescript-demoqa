@@ -1,6 +1,8 @@
-# Cypress Tech Assignment — demoqa Book Store
+# Cypress Tech Assignment
 
-End-to-end test suite for [demoqa.com](https://demoqa.com) using Cypress 15 + TypeScript.
+![CI](https://github.com/ravdeep-bit/cypress-typescript-demoqa/actions/workflows/ci.yml/badge.svg)
+
+UX test suite for [demoqa.com](https://demoqa.com) using Cypress 15 + TypeScript.
 
 ## Suites
 
@@ -27,13 +29,11 @@ npm run typecheck      # tsc --noEmit
 
 ### HTML report
 
-`npm test` writes a Mochawesome report at `cypress/reports/html/index.html` (suite breakdown, durations, embedded failure screenshots).
+`npm test` writes a Mochawesome report at `cypress/reports/index.html` (suite breakdown, durations, embedded failure screenshots).
 
-```bash
-open cypress/reports/html/index.html       # macOS
-xdg-open cypress/reports/html/index.html   # Linux
-start cypress/reports/html/index.html      # Windows
-```
+- **Local:** `open cypress/reports/index.html` (macOS) / `xdg-open` (Linux) / `start` (Windows)
+- **Live (latest main):** [ravdeep-bit.github.io/cypress-typescript-demoqa](https://ravdeep-bit.github.io/cypress-typescript-demoqa/)
+- **Per-run download:** Actions tab → pick a run → Artifacts → `cypress-report`
 
 ## Project structure
 
@@ -57,6 +57,21 @@ start cypress/reports/html/index.html      # Windows
 | **API cleanup — fast and robust** | `cleanCollection()` + `deleteBook()` — bypasses broken UI trash icon |
 | **`cy.intercept` for an *absence* assertion** | `formSubmission.cy.ts` asserts no POST/PUT fires |
 | **`cy.stub` to capture `window.alert`** | `BookDetailsPage.addToCollection()` — Cypress auto-dismisses native dialogs |
-| **`cy.session` for cached login** | `logout.cy.ts` runs alphabetically last so cache invalidates on exit |
+| **`cy.session` for cached login** | `logout.cy.ts` demos session stored + restored |
 | **`step()` helper for long E2E** | 6 markers inside single `it()` of `manageBookCollection.cy.ts` |
 | **Single source for credentials** | `apiLogin` + specs both read `validCredentials` |
+
+## Tags
+
+Specs are annotated with `{ tags: ['@smoke'] }` (8 of 14 tests). The tags are **documentation-only** today — `@cypress/grep` isn't installed, so `npm test` runs everything. Left out for now because the full suite finishes in ~60 s — filtering doesn't earn the extra dependency yet.
+
+## Selector strategy
+
+demoqa is a third-party app, so `data-cy` attributes aren't an option. The suite uses, in order of preference:
+
+1. **Stable IDs** — `#userName`, `#searchBox`, `#ISBN-wrapper` (covers most form + container elements)
+2. **Visible text** — `cy.contains('button', 'Add To Your Collection')` (used when an id is reused for two different buttons)
+3. **Library-specific classes** — `.react-datepicker__day--001`, `[id*="react-select"][id*="-option"]` (only where the library generates runtime ids/classes)
+4. **`CSS.escape`** — guards interpolated values in attribute selectors against quotes / special chars (`BOOK_TITLE_LINK` in `BookStorePage`)
+
+Brittle selectors are documented inline with comments explaining the constraint. If we owned the app, `@testing-library/cypress` (role + accessible name queries) would be the upgrade path.

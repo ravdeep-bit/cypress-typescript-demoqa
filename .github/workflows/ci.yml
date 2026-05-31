@@ -5,15 +5,21 @@ on:
     branches: [main]
   pull_request:
 
+# Required for the deploy job to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -28,3 +34,35 @@ jobs:
         env:
           CYPRESS_DEMOQA_USERNAME: ${{ secrets.DEMOQA_USERNAME }}
           CYPRESS_DEMOQA_PASSWORD: ${{ secrets.DEMOQA_PASSWORD }}
+          # Forces cypress-io/github-action@v6 to use Node 24 runtime (v6 still ships Node 20).
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+      # Downloadable from the run page under Artifacts (works on push + PR). Runs even on failure.
+      - name: Upload test report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-report
+          path: |
+            cypress/reports/
+            cypress/screenshots/
+          retention-days: 14
+
+      # Packages the report for the Pages deploy job (main branch only).
+      - name: Upload Pages artifact
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: cypress/reports
+
+  # Publishes the report to https://<owner>.github.io/<repo>/. Main branch only.
+  deploy-report:
+    needs: test
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
