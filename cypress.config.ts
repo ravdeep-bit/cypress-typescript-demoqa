@@ -6,7 +6,7 @@ export default defineConfig({
   projectId: 'trp3q4',
   // Deletes screenshots/videos before each `cypress run` so failures only show the latest run.
   trashAssetsBeforeRuns: true,
-  // HTML reports — see cypress/reports/html/index.html after `npm test`.
+  // HTML report — see cypress/reports/index.html after `npm test`.
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
     reportDir: 'cypress/reports',

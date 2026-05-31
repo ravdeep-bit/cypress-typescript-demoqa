@@ -31,6 +31,8 @@ npm run typecheck      # tsc --noEmit
 
 `npm test` writes a Mochawesome report at `cypress/reports/index.html` (suite breakdown, durations, embedded failure screenshots).
 
+Reporter chosen for scope. Alternatives: **Monocart** if you also want video playback; **Allure** or **Cypress Cloud** if you want video + run history + trends.
+
 - **Local:** `open cypress/reports/index.html` (macOS) / `xdg-open` (Linux) / `start` (Windows)
 - **Live (latest main):** [ravdeep-bit.github.io/cypress-typescript-demoqa](https://ravdeep-bit.github.io/cypress-typescript-demoqa/)
 - **Per-run download:** Actions tab → pick a run → Artifacts → `cypress-report`
